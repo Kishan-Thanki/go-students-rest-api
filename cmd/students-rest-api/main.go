@@ -10,6 +10,7 @@ import (
 	"time"
 
 	"github.com/Kishan-Thanki/go-students-rest-api/internals/config"
+	"github.com/Kishan-Thanki/go-students-rest-api/internals/http/handlers/student"
 )
 
 func main() {
@@ -20,9 +21,7 @@ func main() {
 
 	// Router Setup
 	router := http.NewServeMux()
-	router.HandleFunc("GET /api/students", func(w http.ResponseWriter, r *http.Request) {
-		w.Write([]byte("Welcome to Students API"))
-	})
+	router.HandleFunc("POST /api/students", student.Create())
 
 	// Server Setup
 	server := http.Server{
