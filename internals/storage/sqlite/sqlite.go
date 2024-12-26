@@ -102,3 +102,50 @@ func (S *SQLite) GetStudents() ([]types.Student, error) {
 
 	return students, nil
 }
+
+func (S *SQLite) UpdateStudentById(id int64, name string, email string, age int) (types.Student, error) {
+	stmt, err := S.Db.Prepare("UPDATE students SET name = ?, email = ?, age = ? WHERE id = ?")
+	if err != nil {
+		return types.Student{}, fmt.Errorf("failed to prepare update statement: %w", err)
+	}
+	defer stmt.Close()
+
+	result, err := stmt.Exec(name, email, age, id)
+	if err != nil {
+		return types.Student{}, fmt.Errorf("failed to execute update statement: %w", err)
+	}
+
+	rowsAffected, err := result.RowsAffected()
+	if err != nil {
+		return types.Student{}, fmt.Errorf("failed to retrieve affected rows: %w", err)
+	}
+	if rowsAffected == 0 {
+		return types.Student{}, fmt.Errorf("no student found with id %d", id)
+	}
+
+	// Retrieve the updated student record
+	return S.GetStudentById(id)
+}
+
+func (S *SQLite) DeleteStudentById(id int64) (bool, error) {
+	stmt, err := S.Db.Prepare("DELETE FROM students WHERE id = ?")
+	if err != nil {
+		return false, fmt.Errorf("failed to prepare delete statement: %w", err)
+	}
+	defer stmt.Close()
+
+	result, err := stmt.Exec(id)
+	if err != nil {
+		return false, fmt.Errorf("failed to execute delete statement: %w", err)
+	}
+
+	rowsAffected, err := result.RowsAffected()
+	if err != nil {
+		return false, fmt.Errorf("failed to retrieve affected rows: %w", err)
+	}
+	if rowsAffected == 0 {
+		return false, fmt.Errorf("no student found with id %d", id)
+	}
+
+	return true, nil
+}
