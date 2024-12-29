@@ -1,3 +1,5 @@
+#### Note: Create 2 package config/config.go and storage/storage.db. And include configuration accordingly
+
 # Students REST API in Go
 
 This is a simple REST API built in **Go** for managing student records. It supports basic **CRUD** (Create, Read, Update, Delete) operations using a **SQLite** database. The API is designed with simplicity in mind, leveraging Go's standard libraries for routing and database management.
